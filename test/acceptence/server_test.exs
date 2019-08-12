@@ -10,5 +10,16 @@ defmodule ServerTest do
         assert send_message("PING") == "+PONG/r/n"
       end
     end
+
+    test "it supports multiple clients" do
+      start_portunus do
+        result =
+          ["PING", "PING"]
+          |> Enum.map(&Task.async(fn -> send_message(&1) end))
+          |> Enum.map(&Task.await(&1))
+
+        assert result == ["+PONG/r/n", "+PONG/r/n"]
+      end
+    end
   end
 end

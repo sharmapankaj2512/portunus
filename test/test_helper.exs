@@ -6,10 +6,7 @@ defmodule TestHelpers do
 
   defmacro start_portunus(block) do
     quote do
-      spawn(fn ->
-        Server.accept(7878)
-      end)
-
+      spawn(fn -> Server.accept(7878) end)
       send_message("READY")
       unquote(block)
     end
