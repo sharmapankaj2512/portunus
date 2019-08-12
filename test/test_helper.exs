@@ -23,7 +23,7 @@ defmodule TestHelpers do
     end
   end
 
-  defp format_message(message) do
+  def format_message(message) do
     "*1\r\n#{String.length(message)}\r\n#{message}\r\n"
   end
 end
