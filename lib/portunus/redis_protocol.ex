@@ -1,14 +1,16 @@
-defmodule Portunus.Data do
+defmodule Portunus.RedisProtocol do
+  @behaviour Portunus.Protocol
+
   import String, only: [downcase: 1]
 
-  @spec marshal(atom) :: String.t
+  @impl Portunus.Protocol
   def marshal(data) when is_atom(data) do
     Atom.to_string(data)
     |> String.upcase
     |> (fn x -> "+#{x}\r\n" end).()
   end
 
-  @spec unmarshal(String.t) :: String.t
+  @impl Portunus.Protocol
   def unmarshal(data) do
     # handle failure scenarions
     # what if * is not present

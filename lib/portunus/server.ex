@@ -1,24 +1,24 @@
 defmodule Portunus.Server do
   require Logger
-  import Portunus.Data, only: [unmarshal: 1, marshal: 1]
+  @default_protocol Portunus.RedisProtocol
 
   def accept(port) do
     {:ok, socket} = :gen_tcp.listen(port, [:binary, active: true, reuseaddr: true])
-    server_handler(socket)
+    server_handler(socket, @default_protocol)
   end
 
-  defp server_handler(socket) do
+  defp server_handler(socket, protocol) do
     {:ok, client} = :gen_tcp.accept(socket)
 
     receive do
       {:tcp, ^client, data} ->
-        unmarshal(data)
+        protocol.unmarshal(data)
         |> command_handler
-        |> marshal
+        |> protocol.marshal
         |> write_line(client)
     end
 
-    server_handler(socket)
+    server_handler(socket, protocol)
   end
 
   defp command_handler(command) do

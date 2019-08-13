@@ -1,9 +1,9 @@
-defmodule DataTest do
+defmodule ProtocolTest do
   use ExUnit.Case
 
-  import Portunus.Data, only: [unmarshal: 1, marshal: 1]
+  import Portunus.RedisProtocol, only: [unmarshal: 1, marshal: 1]
 
-  describe "Portunus.Data" do
+  describe "Portunus.RedisProtocol" do
     import TestHelpers, only: [format_message: 1]
 
     test "unmarshals protocol spec compatible text to raw commands" do
