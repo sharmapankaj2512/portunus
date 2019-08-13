@@ -15,7 +15,7 @@ defmodule ServerTest do
       end
     end
 
-    test "it supports multiple clients" do
+    test "supports multiple clients" do
       start_portunus do
         result =
           ["PING", "PING"]
@@ -26,7 +26,7 @@ defmodule ServerTest do
       end
     end
 
-    test "it echoes client" do
+    test "echoes client" do
       start_portunus do
         assert send_message("ECHO", "hello there") == "$11\r\nhello there\r\n"
       end
