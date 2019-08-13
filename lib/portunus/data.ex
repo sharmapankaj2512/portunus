@@ -5,7 +5,7 @@ defmodule Portunus.Data do
   def marshal(data) when is_atom(data) do
     Atom.to_string(data)
     |> String.upcase
-    |> (fn x -> "+#{x}/r/n" end).()
+    |> (fn x -> "+#{x}\r\n" end).()
   end
 
   @spec unmarshal(String) :: String
