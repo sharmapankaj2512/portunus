@@ -1,6 +1,6 @@
 defmodule Portunus.Server do
   require Logger
-  import Portunus.Data, only: [unmarshal: 1]
+  import Portunus.Data, only: [unmarshal: 1, marshal: 1]
 
   def accept(port) do
     {:ok, socket} = :gen_tcp.listen(port, [:binary, active: true, reuseaddr: true])
@@ -12,18 +12,20 @@ defmodule Portunus.Server do
 
     receive do
       {:tcp, ^client, data} ->
-        command = unmarshal(data)
-
-        cond do
-          command == "ready" ->
-            write_line("+OK/r/n", client)
-
-          command == "ping" ->
-            write_line("+PONG/r/n", client)
-        end
+        unmarshal(data)
+        |> command_handler
+        |> marshal
+        |> write_line(client)
     end
 
     server_handler(socket)
+  end
+
+  defp command_handler(command) do
+    cond do
+      command == "ready" -> :ok
+      command == "ping" -> :pong
+    end
   end
 
   defp write_line(line, socket) do
