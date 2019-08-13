@@ -31,5 +31,13 @@ defmodule ServerTest do
         assert send_message("ECHO", "hello there") == "$11\r\nhello there\r\n"
       end
     end
+
+    test "takes a lock" do
+      start_portunus do
+        assert send_message("LOCK", "myhash") == "+OK\r\n"
+        assert send_message("EXISTS", "myhash") == "+OK\r\n"
+        assert send_message("EXISTS", "nohash") == "-ERR\r\n"
+      end
+    end
   end
 end
