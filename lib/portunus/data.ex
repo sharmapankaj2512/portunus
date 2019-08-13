@@ -7,20 +7,30 @@ defmodule Portunus.Data do
     # what if number of args is not present
     {:ok, result} =
       StringIO.open(data, [capture_prompt: false], fn pid ->
-        if IO.getn(pid, "", 1) == "*" do
-          num_args = String.to_integer(IO.getn(pid, "", 1))
+        if read_first(pid) == "*" do
+          num_args = read_integer(pid)
 
           for _i <- 1..num_args do
-            # /r/n
-            IO.getn(pid, "", 2)
-            len = String.to_integer(IO.getn(pid, "", 1))
-            # /r/n
-            IO.getn(pid, "", 2)
-            IO.getn(pid, "", len)
+            read_integer(pid)
+            read_line(pid)
           end
         end
       end)
 
     downcase(hd(result))
+  end
+
+  defp read_first(pid) do
+    IO.getn(pid, "", 1)
+  end
+
+  defp read_integer(pid) do
+    read_line(pid)
+    |> String.to_integer()
+  end
+
+  defp read_line(pid) do
+    IO.gets(pid, :line)
+    |> String.trim()
   end
 end
