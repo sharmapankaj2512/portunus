@@ -21,8 +21,10 @@ defmodule Portunus.RedisProtocol do
           num_args = read_integer(pid)
 
           for _i <- 1..num_args do
-            read_integer(pid)
-            read_line(pid)
+            if read_first(pid) == "$" do
+              read_integer(pid)
+              read_line(pid)
+            end
           end
         end
       end)

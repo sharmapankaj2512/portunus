@@ -24,6 +24,6 @@ defmodule TestHelpers do
   end
 
   def format_message(message) do
-    "*1\r\n#{String.length(message)}\r\n#{message}\r\n"
+    "*1\r\n$#{String.length(message)}\r\n#{message}\r\n"
   end
 end
