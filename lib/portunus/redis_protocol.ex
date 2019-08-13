@@ -1,5 +1,6 @@
 defmodule Portunus.RedisProtocol do
   @behaviour Portunus.Protocol
+  require Logger
 
   import String, only: [downcase: 1]
 
@@ -10,26 +11,29 @@ defmodule Portunus.RedisProtocol do
     |> (fn x -> "+#{x}\r\n" end).()
   end
 
+  def marshal(data) do
+    "$#{String.length(data)}\r\n#{data}\r\n"
+  end
+
   @impl Portunus.Protocol
   def unmarshal(data) do
     # handle failure scenarions
     # what if * is not present
     # what if number of args is not present
-    {:ok, result} =
+    {:ok, [cmd | args]} =
       StringIO.open(data, [capture_prompt: false], fn pid ->
         if read_first(pid) == "*" do
           num_args = read_integer(pid)
 
-          for _i <- 1..num_args do
+          Enum.map(1..num_args, fn(_) ->
             if read_first(pid) == "$" do
               read_integer(pid)
               read_line(pid)
             end
-          end
+          end)
         end
       end)
-
-    downcase(hd(result))
+      [downcase(cmd) | args]
   end
 
   defp read_first(pid) do

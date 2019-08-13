@@ -21,10 +21,11 @@ defmodule Portunus.Server do
     server_handler(socket, protocol)
   end
 
-  defp command_handler(command) do
+  defp command_handler([command | args]) do
     cond do
       command == "ready" -> :ok
       command == "ping" -> :pong
+      command == "echo" -> hd(args)
     end
   end
 

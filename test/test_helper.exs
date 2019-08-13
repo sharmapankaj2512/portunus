@@ -12,10 +12,10 @@ defmodule TestHelpers do
     end
   end
 
-  def send_message(message) do
+  def send_message(command) do
     opts = [:binary, active: true]
     {_, client} = :gen_tcp.connect('localhost', 7878, opts)
-    :gen_tcp.send(client, format_message(message))
+    :gen_tcp.send(client, format_array([command]))
 
     receive do
       {:tcp, ^client, data} ->
@@ -23,7 +23,26 @@ defmodule TestHelpers do
     end
   end
 
-  def format_message(message) do
-    "*1\r\n$#{String.length(message)}\r\n#{message}\r\n"
+  def send_message(command, message) do
+    opts = [:binary, active: true]
+    {_, client} = :gen_tcp.connect('localhost', 7878, opts)
+    :gen_tcp.send(client, format_array([command, message]))
+
+    receive do
+      {:tcp, ^client, data} ->
+        data
+    end
+  end
+
+  def format_array(messages) do
+    "*#{length(messages)}\r\n" <> format_strings(messages)
+  end
+
+  defp format_strings(messages) do
+    Enum.join(Enum.map(messages, &format_string/1))
+  end
+
+  defp format_string(message) do
+    "$#{String.length(message)}\r\n#{message}\r\n"
   end
 end
