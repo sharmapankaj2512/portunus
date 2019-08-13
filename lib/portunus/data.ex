@@ -1,12 +1,14 @@
 defmodule Portunus.Data do
   import String, only: [downcase: 1]
 
+  @spec marshal(atom) :: String
   def marshal(data) when is_atom(data) do
     Atom.to_string(data)
     |> String.upcase
     |> (fn x -> "+#{x}/r/n" end).()
   end
 
+  @spec unmarshal(String) :: String
   def unmarshal(data) do
     # handle failure scenarions
     # what if * is not present
