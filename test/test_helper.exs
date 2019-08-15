@@ -27,7 +27,9 @@ defmodule TestHelpers do
     {_, client} = :gen_tcp.connect('localhost', 7878, opts)
     :gen_tcp.send(client, format_array(messages))
      case :gen_tcp.recv(client, 0, 5000) do
-      {:ok, data} -> data
+      {:ok, data} ->
+        :gen_tcp.shutdown(client, :read_write)
+        data
       {:error, _} -> :failed
      end
   end
