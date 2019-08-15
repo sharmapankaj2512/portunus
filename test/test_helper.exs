@@ -7,31 +7,39 @@ defmodule TestHelpers do
   defmacro start_portunus(block) do
     quote do
       spawn(fn -> Server.accept(7878) end)
-      send_message("READY")
+      TestHelpers.wait_for_server()
       unquote(block)
     end
   end
 
-  def send_message(command) do
-    opts = [:binary, active: true]
-    {_, client} = :gen_tcp.connect('localhost', 7878, opts)
-    :gen_tcp.send(client, format_array([command]))
-
-    receive do
-      {:tcp, ^client, data} ->
-        data
+  def wait_for_server() do
+    opts = [:binary, active: false]
+    case :gen_tcp.connect('localhost', 7878, opts) do
+      {:ok, client} ->
+        :gen_tcp.shutdown(client, :read_write)
+      {:error, _} ->
+        wait_for_server()
     end
   end
 
+  def send_message(command) do
+    opts = [:binary, active: false]
+    {_, client} = :gen_tcp.connect('localhost', 7878, opts)
+    :gen_tcp.send(client, format_array([command]))
+     case :gen_tcp.recv(client, 0, 5000) do
+      {:ok, data} -> data
+      {:error, _} -> :failed
+     end
+  end
+
   def send_message(command, message) do
-    opts = [:binary, active: true]
+    opts = [:binary, active: false]
     {_, client} = :gen_tcp.connect('localhost', 7878, opts)
     :gen_tcp.send(client, format_array([command, message]))
-
-    receive do
-      {:tcp, ^client, data} ->
-        data
-    end
+    case :gen_tcp.recv(client, 0, 5000) do
+      {:ok, data} -> data
+      {:error, _} -> :failed
+     end
   end
 
   def format_array(messages) do
