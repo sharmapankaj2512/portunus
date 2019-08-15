@@ -22,21 +22,11 @@ defmodule TestHelpers do
     end
   end
 
-  def send_message(command) do
+  def send_message(messages) do
     opts = [:binary, active: false]
     {_, client} = :gen_tcp.connect('localhost', 7878, opts)
-    :gen_tcp.send(client, format_array([command]))
+    :gen_tcp.send(client, format_array(messages))
      case :gen_tcp.recv(client, 0, 5000) do
-      {:ok, data} -> data
-      {:error, _} -> :failed
-     end
-  end
-
-  def send_message(command, message) do
-    opts = [:binary, active: false]
-    {_, client} = :gen_tcp.connect('localhost', 7878, opts)
-    :gen_tcp.send(client, format_array([command, message]))
-    case :gen_tcp.recv(client, 0, 5000) do
       {:ok, data} -> data
       {:error, _} -> :failed
      end
