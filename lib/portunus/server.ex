@@ -1,38 +1,17 @@
-defmodule Portunus.Server do
+defmodule Protunus.Server do
   require Logger
-  @default_protocol Portunus.RedisProtocol
 
-  def accept(port) do
-    case :gen_tcp.listen(port, [:binary, active: false, reuseaddr: true]) do
-      {:ok, socket} -> server_handler(socket, @default_protocol)
-      {:error, :eaddrinuse} -> nil
-    end
+  def listen(port) do
+    :ranch.start_listener(
+      :portunus,
+      :ranch_tcp,
+      [{:port, port}],
+      Protunus.GenProtocol,
+      []
+    )
   end
 
-  defp server_handler(socket, protocol) do
-    {:ok, client} = :gen_tcp.accept(socket)
-    case :gen_tcp.recv(client, 0, 5000) do
-      {:ok, data} ->
-        protocol.unmarshal(data)
-        |> command_handler
-        |> protocol.marshal
-        |> write_line(client)
-      {:error, _} ->
-        write_line( "-ERR server side error", client)
-    end
-
-    server_handler(socket, protocol)
-  end
-
-  defp command_handler([command | args]) do
-    cond do
-      command == "ready" -> :ok
-      command == "ping" -> :pong
-      command == "echo" -> hd(args)
-    end
-  end
-
-  defp write_line(line, socket) do
-    :gen_tcp.send(socket, line)
+  def stop() do
+    :ranch.stop_listener(:portunus)
   end
 end

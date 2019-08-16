@@ -2,7 +2,7 @@ ExUnit.start()
 
 defmodule TestHelpers do
   require Logger
-  alias Protunus.Ranch.Server, as: Server
+  alias Protunus.Server, as: Server
 
   defmacro start_portunus(block) do
     quote do
