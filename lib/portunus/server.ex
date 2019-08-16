@@ -3,7 +3,7 @@ defmodule Portunus.Server do
   @default_protocol Portunus.RedisProtocol
 
   def accept(port) do
-    {:ok, socket} = :gen_tcp.listen(port, [:binary, active: false, reuseaddr: true])
+    {:ok, socket} = :gen_tcp.listen(port, [:binary, active: false, reuseaddr: false])
     server_handler(socket, @default_protocol)
   end
 

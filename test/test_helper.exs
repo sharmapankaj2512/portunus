@@ -23,7 +23,7 @@ defmodule TestHelpers do
   end
 
   def send_message(messages) do
-    opts = [:binary, active: false]
+    opts = [:binary, active: false, reuseaddr: false]
     {_, client} = :gen_tcp.connect('localhost', 7878, opts)
     :gen_tcp.send(client, format_array(messages))
      case :gen_tcp.recv(client, 0, 5000) do

@@ -16,12 +16,13 @@ defmodule ServerTest do
 
     test "supports multiple clients" do
       start_portunus do
+        times = 15
         result =
-          ["PING", "PING"]
+          List.duplicate("PING", times)
           |> Enum.map(&Task.async(fn -> send_message([&1]) end))
           |> Enum.map(&Task.await(&1))
 
-        assert result == ["+PONG\r\n", "+PONG\r\n"]
+        assert result == List.duplicate("+PONG\r\n", times)
       end
     end
 
