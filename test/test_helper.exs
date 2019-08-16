@@ -6,7 +6,7 @@ defmodule TestHelpers do
 
   defmacro start_portunus(block) do
     quote do
-      spawn(fn -> Server.accept(7878) end)
+      spawn_link(fn -> Server.accept(7878) end)
       TestHelpers.wait_for_server()
       unquote(block)
     end
@@ -14,9 +14,11 @@ defmodule TestHelpers do
 
   def wait_for_server() do
     opts = [:binary, active: false]
+
     case :gen_tcp.connect('localhost', 7878, opts) do
       {:ok, client} ->
         :gen_tcp.shutdown(client, :read_write)
+
       {:error, _} ->
         wait_for_server()
     end
@@ -24,14 +26,22 @@ defmodule TestHelpers do
 
   def send_message(messages) do
     opts = [:binary, active: false, reuseaddr: false]
-    {_, client} = :gen_tcp.connect('localhost', 7878, opts)
-    :gen_tcp.send(client, format_array(messages))
-     case :gen_tcp.recv(client, 0, 5000) do
-      {:ok, data} ->
-        :gen_tcp.shutdown(client, :read_write)
-        data
-      {:error, _} -> :failed
-     end
+
+    case :gen_tcp.connect('localhost', 7878, opts) do
+      {:ok, client} ->
+        :gen_tcp.send(client, format_array(messages))
+
+        case :gen_tcp.recv(client, 0) do
+          {:ok, data} ->
+            :gen_tcp.shutdown(client, :read_write)
+            data
+
+          {:error, reason} ->
+            reason
+        end
+      {:error, :econnreset} ->
+        :econnreset
+    end
   end
 
   def format_array(messages) do
