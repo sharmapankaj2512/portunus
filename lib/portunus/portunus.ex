@@ -1,11 +1,7 @@
 defmodule Portunus.App do
   require Logger
 
-  alias Portunus.Locks, as: Locks
-
-  def listen(port) do
-    Locks.init()
-
+  def listen(port \\ 7878) do
     :ranch.start_listener(
       :portunus,
       :ranch_tcp,
@@ -17,5 +13,14 @@ defmodule Portunus.App do
 
   def stop() do
     :ranch.stop_listener(:portunus)
+  end
+
+  def child_spec(_opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :listen, []},
+      type: :supervisor,
+      restart: :permanent,
+    }
   end
 end

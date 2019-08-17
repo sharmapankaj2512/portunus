@@ -1,12 +1,13 @@
 defmodule Portunus.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
-  @moduledoc false
 
   use Application
-  alias Portunus.App, as: Portunus
 
   def start(_type, _args) do
-    Portunus.listen(7878)
+    children = [
+      {Portunus.Locks, [:init]},
+      {Portunus.App, [:listen]}
+    ]
+    opts = [strategy: :one_for_one, name: Portunus.Supervisor]
+    Supervisor.start_link(children, opts)
   end
 end

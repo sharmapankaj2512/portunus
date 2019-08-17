@@ -3,6 +3,10 @@ defmodule Portunus.Locks do
 
   alias Portunus.Error, as: Error
 
+  def start_link(_opts) do
+    init()
+  end
+
   def init(initial_value \\ %{}) do
     Agent.start_link(fn -> initial_value end, name: __MODULE__)
   end
