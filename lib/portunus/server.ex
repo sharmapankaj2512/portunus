@@ -13,6 +13,11 @@ defmodule Protunus.Server do
     {:ok, pid}
   end
 
+  def init(init_arg) do
+    {:ok, init_arg}
+  end
+
+  @spec init(any, any, atom) :: any
   def init(ref, socket, transport) do
     :ok = :ranch.accept_ack(ref)
     :ok = transport.setopts(socket, [{:active, true}])
