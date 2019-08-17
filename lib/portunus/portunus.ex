@@ -1,4 +1,4 @@
-defmodule Protunus.App do
+defmodule Portunus.App do
   require Logger
 
   alias Portunus.Locks, as: Locks

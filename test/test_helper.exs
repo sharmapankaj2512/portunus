@@ -2,7 +2,7 @@ ExUnit.start()
 
 defmodule TestHelpers do
   require Logger
-  alias Protunus.App, as: Portunus
+  alias Portunus.App, as: Portunus
 
   defmacro start_portunus(block) do
     quote do

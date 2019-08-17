@@ -4,16 +4,9 @@ defmodule Portunus.Application do
   @moduledoc false
 
   use Application
+  alias Portunus.App, as: Portunus
 
   def start(_type, _args) do
-    children = [
-      # Starts a worker by calling: Portunus.Worker.start_link(arg)
-      # {Portunus.Worker, arg}
-    ]
-
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Portunus.Supervisor]
-    Supervisor.start_link(children, opts)
+    Portunus.listen(7878)
   end
 end
