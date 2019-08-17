@@ -8,7 +8,8 @@ defmodule Protunus.CommandHandler do
       command == "echo" -> hd(args)
       command == "lock" ->
         Locks.add(hd(args))
-        :ok
+      command == "exists" ->
+        Locks.exists(hd(args))
     end
   end
 end
