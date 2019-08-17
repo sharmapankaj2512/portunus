@@ -3,6 +3,7 @@ defmodule ProtocolTest do
   require Logger
 
   import Portunus.RedisProtocol, only: [unmarshal: 1, marshal: 1]
+  alias Portunus.Error, as: Error
 
   describe "Portunus.RedisProtocol" do
     import TestHelpers, only: [format_array: 1]
@@ -23,7 +24,11 @@ defmodule ProtocolTest do
     end
 
     test "marshals text to protocol specs" do
-      data = [{:ok, "+OK\r\n"}, {:ping, "+PING\r\n"}]
+      data = [
+        {:ok, "+OK\r\n"},
+        {:ping, "+PING\r\n"},
+        {%Error{}, "-ERR\r\n"}
+      ]
       for {text, expected} <- data do
         assert marshal(text) == expected
       end

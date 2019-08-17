@@ -1,6 +1,8 @@
 defmodule Portunus.Locks do
   use Agent
 
+  alias Portunus.Error, as: Error
+
   def init(initial_value \\ %{}) do
     Agent.start_link(fn -> initial_value end, name: __MODULE__)
   end
@@ -10,6 +12,6 @@ defmodule Portunus.Locks do
   end
 
   def exists(key) do
-    Agent.get(__MODULE__, &(if(Map.has_key?(&1, key), do: :ok, else: :error)))
+    Agent.get(__MODULE__, &(if(Map.has_key?(&1, key), do: :ok, else: %Error{})))
   end
 end

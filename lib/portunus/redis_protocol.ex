@@ -3,12 +3,17 @@ defmodule Portunus.RedisProtocol do
   require Logger
 
   import String, only: [downcase: 1]
+  alias Portunus.Error, as: Error
 
   @impl Portunus.Protocol
   def marshal(data) when is_atom(data) do
     Atom.to_string(data)
     |> String.upcase
     |> (fn x -> "+#{x}\r\n" end).()
+  end
+
+  def marshal(%Error{message: message}) do
+    "-ERR\r\n"
   end
 
   def marshal(data) do
