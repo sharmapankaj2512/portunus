@@ -40,6 +40,7 @@ defmodule TestHelpers do
           {:error, reason} ->
             reason
         end
+
       {:error, :econnreset} ->
         :econnreset
     end

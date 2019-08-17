@@ -2,10 +2,11 @@ defmodule ServerTest do
   use ExUnit.Case
   require Logger
 
-  import TestHelpers, only: [
-    send_message: 1,
-    start_portunus: 1
-  ]
+  import TestHelpers,
+    only: [
+      send_message: 1,
+      start_portunus: 1
+    ]
 
   describe "Portunus.Server" do
     test "responds to ping" do
@@ -17,6 +18,7 @@ defmodule ServerTest do
     test "supports multiple clients" do
       start_portunus do
         times = 15
+
         result =
           List.duplicate("PING", times)
           |> Enum.map(&Task.async(fn -> send_message([&1]) end))

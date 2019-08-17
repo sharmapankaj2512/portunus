@@ -8,7 +8,7 @@ defmodule Portunus.RedisProtocol do
   @impl Portunus.Protocol
   def marshal(data) when is_atom(data) do
     Atom.to_string(data)
-    |> String.upcase
+    |> String.upcase()
     |> (fn x -> "+#{x}\r\n" end).()
   end
 
@@ -30,7 +30,7 @@ defmodule Portunus.RedisProtocol do
         if read_first(pid) == "*" do
           num_args = read_integer(pid)
 
-          Enum.map(1..num_args, fn(_) ->
+          Enum.map(1..num_args, fn _ ->
             if read_first(pid) == "$" do
               read_integer(pid)
               read_line(pid)
@@ -38,7 +38,8 @@ defmodule Portunus.RedisProtocol do
           end)
         end
       end)
-      [downcase(cmd) | args]
+
+    [downcase(cmd) | args]
   end
 
   defp read_first(pid) do

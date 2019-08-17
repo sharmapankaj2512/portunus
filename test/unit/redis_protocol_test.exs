@@ -17,7 +17,7 @@ defmodule ProtocolTest do
       ]
 
       for {command, message, expected} <- data do
-        messages = Enum.filter( [command, message], & !is_nil(&1))
+        messages = Enum.filter([command, message], &(!is_nil(&1)))
         raw = format_array(messages)
         assert unmarshal(raw) == expected
       end
@@ -29,6 +29,7 @@ defmodule ProtocolTest do
         {:ping, "+PING\r\n"},
         {%Error{}, "-ERR\r\n"}
       ]
+
       for {text, expected} <- data do
         assert marshal(text) == expected
       end

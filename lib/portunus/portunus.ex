@@ -5,6 +5,7 @@ defmodule Protunus.App do
 
   def listen(port) do
     Locks.init()
+
     :ranch.start_listener(
       :portunus,
       :ranch_tcp,

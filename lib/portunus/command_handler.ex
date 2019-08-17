@@ -3,11 +3,18 @@ defmodule Protunus.CommandHandler do
 
   def command_handler([command | args]) do
     cond do
-      command == "ready" -> :ok
-      command == "ping" -> :pong
-      command == "echo" -> hd(args)
+      command == "ready" ->
+        :ok
+
+      command == "ping" ->
+        :pong
+
+      command == "echo" ->
+        hd(args)
+
       command == "lock" ->
         Locks.add(hd(args))
+
       command == "exists" ->
         Locks.exists(hd(args))
     end

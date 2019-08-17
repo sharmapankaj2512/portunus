@@ -20,9 +20,11 @@ defmodule Protunus.Server do
   end
 
   def handle_info({:tcp, socket, data}, state = %{socket: socket, transport: transport}) do
-    reply = @default_protocol.unmarshal(data)
-    |> command_handler
-    |> @default_protocol.marshal
+    reply =
+      @default_protocol.unmarshal(data)
+      |> command_handler
+      |> @default_protocol.marshal
+
     transport.send(socket, reply)
     {:noreply, state}
   end
