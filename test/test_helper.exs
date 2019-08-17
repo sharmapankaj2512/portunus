@@ -2,14 +2,14 @@ ExUnit.start()
 
 defmodule TestHelpers do
   require Logger
-  alias Protunus.Server, as: Server
+  alias Protunus.App, as: Portunus
 
   defmacro start_portunus(block) do
     quote do
-      Server.listen(7878)
+      Portunus.listen(7878)
       TestHelpers.wait_for_server()
       unquote(block)
-      Server.stop()
+      Portunus.stop()
     end
   end
 
