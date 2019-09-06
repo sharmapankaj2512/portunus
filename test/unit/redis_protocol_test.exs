@@ -13,7 +13,8 @@ defmodule ProtocolTest do
         {"READY", nil, ["ready"]},
         {"PING", nil, ["ping"]},
         {"ECHO", "hello there", ["echo", "hello there"]},
-        {"LOCK", "myhash", ["lock", "myhash"]}
+        {"LOCK", "myhash", ["lock", "myhash"]},
+        {"RELEASE", "myhash", ["release", "myhash"]}
       ]
 
       for {command, message, expected} <- data do

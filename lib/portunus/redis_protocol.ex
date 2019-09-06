@@ -12,7 +12,7 @@ defmodule Portunus.RedisProtocol do
     |> (fn x -> "+#{x}\r\n" end).()
   end
 
-  def marshal(%Error{message: message}) do
+  def marshal(%Error{message: _message}) do
     "-ERR\r\n"
   end
 

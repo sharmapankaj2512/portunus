@@ -17,6 +17,9 @@ defmodule Protunus.CommandHandler do
 
       command == "exists" ->
         Locks.exists(hd(args))
+
+      command == "release" ->
+        Locks.release(hd(args))
     end
   end
 end

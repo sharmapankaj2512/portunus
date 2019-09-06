@@ -18,4 +18,8 @@ defmodule Portunus.Locks do
   def exists(key) do
     Agent.get(__MODULE__, &if(Map.has_key?(&1, key), do: :ok, else: %Error{}))
   end
+
+  def release(key) do
+    Agent.update(__MODULE__, &Map.delete(&1, key))
+  end
 end
