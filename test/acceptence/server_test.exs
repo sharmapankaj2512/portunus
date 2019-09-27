@@ -46,7 +46,7 @@ defmodule ServerTest do
       start_portunus do
         assert send_message(["LOCK", "myhash"]) == "+OK\r\n"
         assert send_message(["RELEASE", "myhash"]) == "+OK\r\n"
-        # assert send_message(["EXISTS", "nohash"]) == "-ERR\r\n"
+        assert send_message(["EXISTS", "nohash"]) == "-ERR\r\n"
       end
     end
   end
