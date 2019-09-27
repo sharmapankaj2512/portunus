@@ -25,7 +25,7 @@ defmodule Portunus.MixProject do
       {:ranch, "~> 1.7"},
       {:credo, "~> 1.1.4", only: [:dev, :test], runtime: false},
       {:coverex, "~> 1.4.15", only: :test},
-      {:dogma, "~> 0.1.16", only: :dev},
+      {:dogma, "~> 0.1.16", only: :dev}
     ]
   end
 end

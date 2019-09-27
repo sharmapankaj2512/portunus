@@ -20,7 +20,7 @@ defmodule Portunus.App do
       id: __MODULE__,
       start: {__MODULE__, :listen, []},
       type: :supervisor,
-      restart: :permanent,
+      restart: :permanent
     }
   end
 end

@@ -20,6 +20,10 @@ defmodule Protunus.CommandHandler do
 
       command == "release" ->
         Locks.release(hd(args))
+
+      command == "expires" ->
+        [key, seconds] = args
+        Locks.expires(key, String.to_integer(seconds))
     end
   end
 end

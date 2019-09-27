@@ -2,6 +2,8 @@ defmodule ServerTest do
   use ExUnit.Case
   require Logger
 
+  @fake Application.get_env(:portunus, :time)
+
   import TestHelpers,
     only: [
       send_message: 1,
@@ -47,6 +49,16 @@ defmodule ServerTest do
         assert send_message(["LOCK", "myhash"]) == "+OK\r\n"
         assert send_message(["RELEASE", "myhash"]) == "+OK\r\n"
         assert send_message(["EXISTS", "nohash"]) == "-ERR\r\n"
+      end
+    end
+
+    test "expires a lock" do
+      start_portunus do
+        @fake.init()
+        assert send_message(["LOCK", "myhash"]) == "+OK\r\n"
+        assert send_message(["EXPIRES", "myhash", "10"]) == "+OK\r\n"
+        @fake.sleep(11)
+        assert send_message(["EXISTS", "myhash"]) == "-ERR\r\n"
       end
     end
   end

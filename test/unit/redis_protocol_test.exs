@@ -14,7 +14,8 @@ defmodule ProtocolTest do
         {"PING", nil, ["ping"]},
         {"ECHO", "hello there", ["echo", "hello there"]},
         {"LOCK", "myhash", ["lock", "myhash"]},
-        {"RELEASE", "myhash", ["release", "myhash"]}
+        {"RELEASE", "myhash", ["release", "myhash"]},
+        {"EXPIRES", "myhash", 10, ["release", "myhash", 10]}
       ]
 
       for {command, message, expected} <- data do
